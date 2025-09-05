@@ -3,8 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Key, Settings } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { ragApi } from '@/services/ragApi';
+import { openaiApi } from '@/services/openaiApi';
+import { ApiKeyModal } from './ApiKeyModal';
 
 export function Witness() {
   const { state, updateState } = useApp();
@@ -34,8 +38,24 @@ export function Witness() {
         updateState({ rawResp });
       }
 
-      // Add assistant reply
-      const assistantText = rawResp.answer || state.composed || '(no content)';
+      // Try GPT composition if API key is available
+      let assistantText = rawResp.answer || '(no content)';
+      
+      if (state.gptApiKey) {
+        try {
+          const composedText = await openaiApi.composeReply(
+            state.gptApiKey,
+            state.gptModel,
+            state.pendingText,
+            rawResp
+          );
+          assistantText = composedText;
+        } catch (error) {
+          console.error('GPT composition failed:', error);
+          // Fallback to raw response
+        }
+      }
+
       const assistantMessage = { role: 'assistant' as const, text: assistantText };
       
       updateState({ 
@@ -61,26 +81,80 @@ export function Witness() {
     }
   };
 
+  const gptModels = [
+    { value: 'gpt-5-2025-08-07', label: 'GPT-5 (Flagship)' },
+    { value: 'gpt-5-mini-2025-08-07', label: 'GPT-5 Mini (Fast)' },
+    { value: 'gpt-5-nano-2025-08-07', label: 'GPT-5 Nano (Fastest)' },
+    { value: 'gpt-4.1-2025-04-14', label: 'GPT-4.1 (Reliable)' },
+    { value: 'o3-2025-04-16', label: 'O3 (Reasoning)' },
+    { value: 'o4-mini-2025-04-16', label: 'O4 Mini (Fast Reasoning)' },
+  ];
+
   return (
     <div className="flex flex-col h-full">
-      {/* Header with Mode Dropdown */}
+      <ApiKeyModal />
+      
+      {/* Header with Controls */}
       <div className="flex items-center justify-between p-6 border-b border-border">
-        <h1 className="text-2xl font-bold text-witness-structure font-witness">
-          Witness Protocol
-        </h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold text-witness-structure font-witness">
+            Witness Protocol
+          </h1>
+          
+          {/* GPT Status Badge */}
+          <Badge 
+            variant={state.gptApiKey ? "default" : "secondary"}
+            className="font-technical text-xs"
+          >
+            {state.gptApiKey ? `GPT: ${state.gptModel.replace('gpt-', '').replace('-2025-08-07', '').replace('-2025-04-14', '').replace('-2025-04-16', '').toUpperCase()}` : 'No GPT'}
+          </Badge>
+        </div>
         
-        <Select 
-          value={state.mode} 
-          onValueChange={(value: string) => updateState({ mode: value as any })}
-        >
-          <SelectTrigger className="w-48">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Seed Only">Seed Only</SelectItem>
-            <SelectItem value="Seed + RAG">Seed + RAG</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-3">
+          {/* API Key Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => updateState({ showApiKeyModal: true })}
+            className="flex items-center gap-2"
+          >
+            <Key className="w-4 h-4" />
+            {state.gptApiKey ? 'Update Key' : 'Set API Key'}
+          </Button>
+          
+          {/* GPT Model Dropdown */}
+          {state.gptApiKey && (
+            <Select 
+              value={state.gptModel} 
+              onValueChange={(value: string) => updateState({ gptModel: value })}
+            >
+              <SelectTrigger className="w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="z-50">
+                {gptModels.map((model) => (
+                  <SelectItem key={model.value} value={model.value}>
+                    {model.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          
+          {/* Mode Dropdown */}
+          <Select 
+            value={state.mode} 
+            onValueChange={(value: string) => updateState({ mode: value as any })}
+          >
+            <SelectTrigger className="w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="z-50">
+              <SelectItem value="Seed Only">Seed Only</SelectItem>
+              <SelectItem value="Seed + RAG">Seed + RAG</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Chat Transcript */}

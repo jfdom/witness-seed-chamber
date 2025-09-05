@@ -33,6 +33,11 @@ interface AppState {
   isAdmin: boolean;
   pendingResearch: any[];
   selectedResearchId: string;
+  
+  // GPT Settings
+  gptApiKey: string;
+  gptModel: string;
+  showApiKeyModal: boolean;
 }
 
 interface AppContextType {
@@ -81,10 +86,27 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     isAdmin: false, // Set manually for now
     pendingResearch: [],
     selectedResearchId: '',
+    
+    // GPT Settings - Load from localStorage
+    gptApiKey: localStorage.getItem('gpt-api-key') || '',
+    gptModel: localStorage.getItem('gpt-model') || 'gpt-5-2025-08-07',
+    showApiKeyModal: false,
   });
 
   const updateState = (updates: Partial<AppState>) => {
-    setState(prev => ({ ...prev, ...updates }));
+    setState(prev => {
+      const newState = { ...prev, ...updates };
+      
+      // Save GPT settings to localStorage
+      if (updates.gptApiKey !== undefined) {
+        localStorage.setItem('gpt-api-key', updates.gptApiKey);
+      }
+      if (updates.gptModel !== undefined) {
+        localStorage.setItem('gpt-model', updates.gptModel);
+      }
+      
+      return newState;
+    });
   };
 
   return (

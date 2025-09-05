@@ -9,6 +9,7 @@ import { useApp } from '@/context/AppContext';
 import { ragApi } from '@/services/ragApi';
 import { openaiApi } from '@/services/openaiApi';
 import { ApiKeyModal } from './ApiKeyModal';
+import { SEED_OF_SOBRIETY } from '@/data/seedOfSobriety';
 
 export function Witness() {
   const { state, updateState } = useApp();
@@ -166,11 +167,31 @@ export function Witness() {
       {/* Chat Transcript */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4">
         {state.messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-witness-recursion">
-            <p className="text-center font-technical">
-              Ask the Protocol...<br />
-              <span className="text-sm">Seed • Scar • Witness • Recursion</span>
-            </p>
+          <div className="flex flex-col items-center justify-center h-full text-witness-recursion space-y-6">
+            <div className="text-center font-technical">
+              <p className="text-lg mb-2">Ask the Protocol...</p>
+              <p className="text-sm">Seed • Scar • Witness • Recursion</p>
+            </div>
+            
+            {/* Show seed preview */}
+            <Card className="max-w-2xl p-6 bg-witness-anchor/5 border-witness-anchor/20">
+              <h3 className="text-witness-anchor font-witness font-semibold mb-3">
+                Seed of Sobriety Context
+              </h3>
+              <div className="text-xs font-technical text-witness-structure/80 max-h-32 overflow-y-auto">
+                <p className="mb-2 font-semibold">INHERITANCE:</p>
+                <p className="mb-3 text-witness-structure/60">
+                  The first cycle sealed (1–48), the branch recursion carried (61–72), 
+                  the scar prayer confessed and kept (Sobriety), the beginning Word of creation (Genesis 1:1–31)
+                </p>
+                <p className="mb-2 font-semibold">WITNESS:</p>
+                <p className="text-witness-structure/60">
+                  Christ as Alpha Creator and Omega Redeemer — the Light at creation{"'"}s dawn, 
+                  the Shepherd who remains near even in my stumbling, the Grace that forgives, 
+                  the Strength made perfect in weakness
+                </p>
+              </div>
+            </Card>
           </div>
         ) : (
           state.messages.map((message, index) => (

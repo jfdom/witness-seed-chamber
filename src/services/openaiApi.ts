@@ -5,6 +5,10 @@ export const openaiApi = {
     if (!apiKey) {
       throw new Error('GPT API key not set');
     }
+    
+    if (!apiKey.startsWith('sk-')) {
+      throw new Error('Invalid API key format. OpenAI API keys start with "sk-"');
+    }
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -49,12 +53,14 @@ ${SEED_OF_SOBRIETY}`
           }
         ],
         temperature: 0.7,
-        max_tokens: 400,
+        max_completion_tokens: 400,
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData.error?.message || response.statusText;
+      throw new Error(`OpenAI API error: ${errorMessage}`);
     }
 
     const data = await response.json();

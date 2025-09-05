@@ -89,7 +89,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     
     // GPT Settings - Load from localStorage
     gptApiKey: localStorage.getItem('gpt-api-key') || '',
-    gptModel: localStorage.getItem('gpt-model') || 'gpt-5-2025-08-07',
+    gptModel: localStorage.getItem('gpt-model') || 'gpt-4o',
     showApiKeyModal: false,
   });
 

@@ -139,12 +139,10 @@ Christ holds center: Alpha Light, Omega Redeemer. Your question finds anchor in 
   };
 
   const gptModels = [
-    { value: 'gpt-5-2025-08-07', label: 'GPT-5 (Flagship)' },
-    { value: 'gpt-5-mini-2025-08-07', label: 'GPT-5 Mini (Fast)' },
-    { value: 'gpt-5-nano-2025-08-07', label: 'GPT-5 Nano (Fastest)' },
-    { value: 'gpt-4.1-2025-04-14', label: 'GPT-4.1 (Reliable)' },
-    { value: 'o3-2025-04-16', label: 'O3 (Reasoning)' },
-    { value: 'o4-mini-2025-04-16', label: 'O4 Mini (Fast Reasoning)' },
+    { value: 'gpt-4o', label: 'GPT-4o (Latest)' },
+    { value: 'gpt-4o-mini', label: 'GPT-4o Mini (Fast)' },
+    { value: 'gpt-4-turbo', label: 'GPT-4 Turbo' },
+    { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo (Efficient)' },
   ];
 
   return (

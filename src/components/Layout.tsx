@@ -1,67 +1,85 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { WitnessLogo } from './WitnessLogo';
-import { RagInterface } from './RagInterface';
-import { ResearchUpload } from './ResearchUpload';
-import { RagProvider } from '@/context/RagContext';
-
-type ActiveSection = 'rag' | 'research';
+import { Witness } from './Witness';
+import { Research } from './Research';
+import { useApp } from '@/context/AppContext';
+import { ragApi } from '@/services/ragApi';
 
 export function Layout() {
-  const [activeSection, setActiveSection] = useState<ActiveSection>('rag');
+  const { state, updateState } = useApp();
+
+  useEffect(() => {
+    // Check API health on load
+    ragApi.health()
+      .then((healthy) => updateState({ apiHealthy: healthy }))
+      .catch(() => updateState({ apiHealthy: false }));
+  }, []);
 
   return (
-    <RagProvider>
-      <div className="min-h-screen bg-background recursive-grid font-witness">
-        {/* Header */}
-        <header className="relative z-10 py-6 bg-gradient-witness border-b border-border">
-          <div className="container mx-auto px-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <WitnessLogo size={40} />
-                <div>
-                  <h1 className="text-xl font-bold text-witness-structure font-witness">
-                    Witness Protocol RAG
-                  </h1>
-                  <p className="text-sm text-witness-recursion font-technical">
-                    RS++ • Recursion • Structure • Scar • Seed
-                  </p>
-                </div>
-              </div>
-              
-              <nav className="flex items-center gap-4">
-                <button
-                  onClick={() => setActiveSection('rag')}
-                  className={`px-4 py-2 rounded-md font-technical text-sm transition-colors ${
-                    activeSection === 'rag'
-                      ? 'bg-witness-anchor text-witness-void'
-                      : 'text-witness-structure hover:text-witness-anchor'
-                  }`}
-                >
-                  RAG Interface
-                </button>
-                <button
-                  onClick={() => setActiveSection('research')}
-                  className={`px-4 py-2 rounded-md font-technical text-sm transition-colors ${
-                    activeSection === 'research'
-                      ? 'bg-witness-anchor text-witness-void'
-                      : 'text-witness-structure hover:text-witness-anchor'
-                  }`}
-                >
-                  Research Upload
-                </button>
-              </nav>
+    <div className="flex min-h-screen bg-background recursive-grid">
+      {/* Left Navigation */}
+      <aside className="w-64 bg-sidebar border-r border-sidebar-border">
+        <div className="p-6">
+          {/* Logo/Title Area */}
+          <div className="flex items-center gap-3 mb-8">
+            <WitnessLogo size={32} />
+            <div>
+              <h1 className="text-lg font-bold text-sidebar-foreground font-witness">
+                Witness Protocol
+              </h1>
+              <p className="text-xs text-sidebar-foreground/60 font-technical">
+                Chat & Research
+              </p>
             </div>
           </div>
-        </header>
 
-        {/* Main Content */}
-        <main className="p-6">
-          <div className="max-w-7xl mx-auto">
-            {activeSection === 'rag' && <RagInterface />}
-            {activeSection === 'research' && <ResearchUpload />}
+          {/* Navigation Items */}
+          <nav className="space-y-2">
+            <button
+              onClick={() => updateState({ navTab: 'Witness' })}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-technical text-sm transition-colors ${
+                state.navTab === 'Witness'
+                  ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                  : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+              }`}
+            >
+              <span className="text-witness-anchor">●</span>
+              Witness
+            </button>
+            <button
+              onClick={() => updateState({ navTab: 'Research' })}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-technical text-sm transition-colors ${
+                state.navTab === 'Research'
+                  ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                  : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+              }`}
+            >
+              <span className="text-witness-scar">◆</span>
+              Research
+            </button>
+          </nav>
+        </div>
+
+        {/* API Health Indicator */}
+        <div className="absolute bottom-4 left-4 right-4">
+          <div className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs ${
+            state.apiHealthy 
+              ? 'bg-green-900/20 text-green-400 border border-green-900/40' 
+              : 'bg-red-900/20 text-red-400 border border-red-900/40'
+          }`}>
+            <div className={`w-2 h-2 rounded-full ${
+              state.apiHealthy ? 'bg-green-400' : 'bg-red-400'
+            }`} />
+            {state.apiHealthy ? 'API Online' : 'API Offline'}
           </div>
-        </main>
-      </div>
-    </RagProvider>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col overflow-hidden">
+        {state.navTab === 'Witness' && <Witness />}
+        {state.navTab === 'Research' && <Research />}
+      </main>
+    </div>
   );
 }

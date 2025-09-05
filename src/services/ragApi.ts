@@ -1,4 +1,4 @@
-const BASE_URL = 'https://YOUR_PUBLIC_API';
+const BASE_URL = 'https://feb17d6e60ae.ngrok-free.app';
 
 export const ragApi = {
   // Chat endpoints

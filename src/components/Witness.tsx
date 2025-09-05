@@ -90,6 +90,12 @@ export function Witness() {
     { value: 'o4-mini-2025-04-16', label: 'O4 Mini (Fast Reasoning)' },
   ];
 
+  console.log('Witness component rendering, state:', { 
+    gptApiKey: state.gptApiKey ? 'SET' : 'NOT SET', 
+    gptModel: state.gptModel,
+    navTab: state.navTab 
+  });
+
   return (
     <div className="flex flex-col h-full">
       <ApiKeyModal />

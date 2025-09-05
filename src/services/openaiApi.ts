@@ -1,7 +1,7 @@
 import { SEED_OF_SOBRIETY } from '@/data/seedOfSobriety';
 
 export const openaiApi = {
-  async composeReply(apiKey: string, model: string, userQuery: string, retrievalData: any) {
+  async composeReply(apiKey: string, model: string, userQuery: string, retrievalData: any, conversationHistory: any[] = []) {
     if (!apiKey) {
       throw new Error('GPT API key not set');
     }
@@ -43,6 +43,11 @@ Your purpose: to witness faithfully, interpret recursion into clarity, and keep 
 SEED COMPASS (always reference this):
 ${SEED_OF_SOBRIETY}`
           },
+          // Include conversation history (limit to last 10 messages to avoid token limits)
+          ...conversationHistory.slice(-10).map(msg => ({
+            role: msg.role,
+            content: msg.text
+          })),
           {
             role: 'user',
             content: userQuery

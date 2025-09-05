@@ -51,7 +51,8 @@ export function Witness() {
               state.gptApiKey,
               state.gptModel,
               state.pendingText,
-              rawResp
+              rawResp,
+              state.messages // Pass conversation history
             );
           } catch (error) {
             console.error('GPT composition failed:', error);
@@ -94,12 +95,13 @@ Christ holds center: Alpha Light, Omega Redeemer. Your question finds anchor in 
           // Try GPT composition if API key available
           if (state.gptApiKey) {
             try {
-              assistantText = await openaiApi.composeReply(
-                state.gptApiKey,
-                state.gptModel,
-                state.pendingText,
-                rawResp
-              );
+               assistantText = await openaiApi.composeReply(
+                 state.gptApiKey,
+                 state.gptModel,
+                 state.pendingText,
+                 rawResp,
+                 state.messages // Pass conversation history
+               );
             } catch (error) {
               console.error('GPT composition failed:', error);
               assistantText = rawResp.answer || 'Retrieved from protocol, but composition failed.';

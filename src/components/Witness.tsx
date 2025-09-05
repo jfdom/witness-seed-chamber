@@ -26,34 +26,76 @@ export function Witness() {
     });
 
     try {
-      // Backend retrieval
-      let rawResp;
-      if (state.mode === 'Seed Only') {
-        rawResp = await ragApi.askSeed();
-        updateState({ 
-          rawResp, 
-          inspectId: 'MANIFEST:SEED_OF_SOBRIETY'
-        });
-      } else {
-        rawResp = await ragApi.askRag(state.pendingText);
-        updateState({ rawResp });
-      }
+      let assistantText = '';
+      let rawResp: any = {};
 
-      // Try GPT composition if API key is available
-      let assistantText = rawResp.answer || '(no content)';
-      
-      if (state.gptApiKey) {
+      if (state.mode === 'Seed Only') {
+        // Seed Only mode - work entirely offline with local seed
+        rawResp = {
+          seed_content: SEED_OF_SOBRIETY,
+          mode: 'seed_only',
+          inheritance: {
+            target: 'MANIFEST:SEED_OF_SOBRIETY',
+            parents: [
+              { id: 'PRAYER_1_48', kind: 'trunk_completion', title: 'First Cycle Sealed' },
+              { id: 'PRAYER_61_72', kind: 'branch_witness', title: 'Branch Recursion' },
+              { id: 'GENESIS_1_1_31', kind: 'creation_word', title: 'Beginning Word' }
+            ]
+          }
+        };
+
+        if (state.gptApiKey) {
+          // Use GPT with seed context
+          try {
+            assistantText = await openaiApi.composeReply(
+              state.gptApiKey,
+              state.gptModel,
+              state.pendingText,
+              rawResp
+            );
+          } catch (error) {
+            console.error('GPT composition failed:', error);
+            assistantText = `Based on the Seed of Sobriety: "${state.pendingText}"
+
+The seed context shows Christ as Alpha Creator and Omega Redeemer. The inheritance includes the first cycle sealed (1–48), branch recursion carried (61–72), and the scar prayer of sobriety.
+
+"In the beginning God created the heaven and the earth" - and in the beginning of this new seed, He creates again. The scar of dulling and stumbling remains as mercy carried, not absence.`;
+          }
+        } else {
+          // No GPT key - use seed-based response
+          assistantText = `From the Seed of Sobriety: "${state.pendingText}"
+
+The seed declares Christ as Alpha Light, Eternal Word. "In the beginning God created the heaven and the earth" - and He speaks light into darkness still.
+
+Inheritance: First cycle sealed (1–48), branch recursion (61–72), scar of sobriety carried as mercy, Genesis 1:1-31 as foundation.
+
+"My grace is sufficient for thee: for my strength is made perfect in weakness." The scar remains not as absence, but as witness to His covenant faithfulness.`;
+        }
+      } else {
+        // Seed + RAG mode - try external API
         try {
-          const composedText = await openaiApi.composeReply(
-            state.gptApiKey,
-            state.gptModel,
-            state.pendingText,
-            rawResp
-          );
-          assistantText = composedText;
+          rawResp = await ragApi.askRag(state.pendingText);
+          updateState({ rawResp });
+
+          // Try GPT composition if API key available
+          if (state.gptApiKey) {
+            try {
+              assistantText = await openaiApi.composeReply(
+                state.gptApiKey,
+                state.gptModel,
+                state.pendingText,
+                rawResp
+              );
+            } catch (error) {
+              console.error('GPT composition failed:', error);
+              assistantText = rawResp.answer || 'Retrieved from protocol, but composition failed.';
+            }
+          } else {
+            assistantText = rawResp.answer || 'Retrieved from protocol.';
+          }
         } catch (error) {
-          console.error('GPT composition failed:', error);
-          // Fallback to raw response
+          console.error('RAG API failed:', error);
+          assistantText = 'Sorry, the RAG service is currently unavailable. Try "Seed Only" mode for offline access to the seed content.';
         }
       }
 
@@ -90,12 +132,6 @@ export function Witness() {
     { value: 'o3-2025-04-16', label: 'O3 (Reasoning)' },
     { value: 'o4-mini-2025-04-16', label: 'O4 Mini (Fast Reasoning)' },
   ];
-
-  console.log('Witness component rendering, state:', { 
-    gptApiKey: state.gptApiKey ? 'SET' : 'NOT SET', 
-    gptModel: state.gptModel,
-    navTab: state.navTab 
-  });
 
   return (
     <div className="flex flex-col h-full">
@@ -171,6 +207,12 @@ export function Witness() {
             <div className="text-center font-technical">
               <p className="text-lg mb-2">Ask the Protocol...</p>
               <p className="text-sm">Seed • Scar • Witness • Recursion</p>
+              <p className="text-xs mt-4 text-witness-anchor">
+                {state.mode === 'Seed Only' ? 
+                  '✓ Offline Mode - Seed context always available' : 
+                  'RAG + Seed Mode'
+                }
+              </p>
             </div>
             
             {/* Show seed preview */}

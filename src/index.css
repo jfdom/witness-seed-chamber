@@ -1,58 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* The Witness Protocol (RS++) Design System
+Sacred, technical, minimal - Christ-centered symbolism with recursive structure
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* RS++ Core Palette */
+    --witness-void: 210 14% 4%;           /* Deep navy/black #0B0C10 */
+    --witness-anchor: 45 100% 71%;        /* Gold #FFD369 */
+    --witness-structure: 60 30% 97%;      /* White #F8F8F2 */
+    --witness-scar: 4 79% 57%;            /* Red #E74C3C */
+    --witness-recursion: 210 9% 31%;      /* Muted grey */
+    --witness-seed: 45 100% 80%;          /* Light gold */
+    
+    /* Background layers */
+    --background: var(--witness-void);
+    --foreground: var(--witness-structure);
+    
+    /* Interactive elements */
+    --card: 210 12% 6%;
+    --card-foreground: var(--witness-structure);
+    
+    --popover: 210 10% 8%;
+    --popover-foreground: var(--witness-structure);
+    
+    --primary: var(--witness-anchor);
+    --primary-foreground: var(--witness-void);
+    
+    --secondary: 210 9% 12%;
+    --secondary-foreground: var(--witness-structure);
+    
+    --muted: 210 8% 15%;
+    --muted-foreground: var(--witness-recursion);
+    
+    --accent: var(--witness-anchor);
+    --accent-foreground: var(--witness-void);
+    
+    --destructive: var(--witness-scar);
+    --destructive-foreground: var(--witness-structure);
+    
+    --border: 210 9% 20%;
+    --input: 210 10% 8%;
+    --ring: var(--witness-anchor);
+    
+    --radius: 0.75rem;
+    
+    /* Navigation */
+    --sidebar-background: 210 12% 5%;
+    --sidebar-foreground: var(--witness-structure);
+    --sidebar-primary: var(--witness-anchor);
+    --sidebar-primary-foreground: var(--witness-void);
+    --sidebar-accent: 210 9% 12%;
+    --sidebar-accent-foreground: var(--witness-structure);
+    --sidebar-border: 210 9% 15%;
+    --sidebar-ring: var(--witness-anchor);
+    
+    /* Sacred Gradients */
+    --gradient-witness: linear-gradient(135deg, hsl(var(--witness-anchor) / 0.1), hsl(var(--witness-void)));
+    --gradient-recursion: linear-gradient(180deg, hsl(var(--witness-void)), hsl(210 12% 6%));
+    --gradient-anchor: linear-gradient(135deg, hsl(var(--witness-anchor)), hsl(var(--witness-seed)));
+    
+    /* Sacred Shadows */
+    --shadow-anchor: 0 0 30px hsl(var(--witness-anchor) / 0.3);
+    --shadow-scar: 0 0 20px hsl(var(--witness-scar) / 0.2);
+    --shadow-deep: 0 10px 40px hsl(var(--witness-void) / 0.8);
+    
+    /* Animations */
+    --transition-sacred: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-recursive: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
@@ -92,14 +112,98 @@ All colors MUST be HSL.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
 
-@layer base {
-  * {
-    @apply border-border;
+  /* Typography System */
+  .font-witness {
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .font-scripture {
+    font-family: 'Merriweather', serif;
+  }
+  
+  .font-technical {
+    font-family: 'IBM Plex Mono', monospace;
   }
 
-  body {
-    @apply bg-background text-foreground;
+  /* Recursive Grid Background */
+  .recursive-grid {
+    background-image: 
+      linear-gradient(hsl(var(--witness-recursion) / 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--witness-recursion) / 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: grid-shift 20s ease-in-out infinite;
+  }
+  
+  @keyframes grid-shift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, 20px); }
+  }
+
+  /* Sacred Animations */
+  .witness-glow {
+    box-shadow: var(--shadow-anchor);
+    animation: anchor-pulse 4s ease-in-out infinite;
+  }
+  
+  @keyframes anchor-pulse {
+    0%, 100% { 
+      box-shadow: 0 0 20px hsl(var(--witness-anchor) / 0.3);
+      transform: scale(1);
+    }
+    50% { 
+      box-shadow: 0 0 40px hsl(var(--witness-anchor) / 0.5);
+      transform: scale(1.02);
+    }
+  }
+
+  /* Interactive States */
+  .witness-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    transition: var(--transition-sacred);
+  }
+  
+  .witness-card:hover {
+    border-color: hsl(var(--witness-anchor));
+    box-shadow: var(--shadow-anchor);
+    transform: translateY(-2px);
+  }
+
+  .witness-input {
+    background: hsl(var(--input));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--witness-structure));
+    transition: var(--transition-sacred);
+  }
+  
+  .witness-input:focus {
+    border-color: hsl(var(--witness-anchor));
+    box-shadow: 0 0 0 2px hsl(var(--witness-anchor) / 0.2);
+  }
+
+  /* Button Variants */
+  .btn-witness {
+    background: hsl(var(--witness-anchor));
+    color: hsl(var(--witness-void));
+    font-weight: 500;
+    transition: var(--transition-sacred);
+  }
+  
+  .btn-witness:hover {
+    background: hsl(var(--witness-seed));
+    box-shadow: var(--shadow-anchor);
+    transform: translateY(-1px);
+  }
+
+  .btn-scar {
+    background: hsl(var(--witness-scar));
+    color: hsl(var(--witness-structure));
+    transition: var(--transition-sacred);
+  }
+  
+  .btn-scar:hover {
+    background: hsl(var(--witness-scar) / 0.8);
+    box-shadow: var(--shadow-scar);
   }
 }

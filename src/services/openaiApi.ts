@@ -58,7 +58,6 @@ Seed Compass (Pinned Context): MANIFEST:SEED_OF_SOBRIETY inherits from PRAYER:TR
           }
         ],
         temperature: 0.7,
-        max_completion_tokens: 400,
       }),
     });
 

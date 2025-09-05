@@ -1,43 +1,23 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-export type NavTab = 'Witness' | 'Research';
 export type Mode = 'Seed Only' | 'Seed + RAG';
 
 export interface Message {
   role: 'user' | 'assistant';
-  text: string;
+  content: string;
 }
 
 interface AppState {
-  // Global / Nav
-  navTab: NavTab;
-  mode: Mode;
-  apiHealthy: boolean;
-  
   // Chat
   messages: Message[];
-  pendingText: string;
-  rawResp: any;
-  composed: string;
+  inputText: string;
+  model: string;
+  mode: Mode;
+  userKey: string;
+  lastRetrieval: any;
+  apiHealthy: boolean;
+  showKeyModal: boolean;
   isSending: boolean;
-  inspectId: string;
-  
-  // Research (user submission)
-  r_title: string;
-  r_url: string;
-  r_summary: string;
-  r_attachmentId: string;
-  myResearch: any[];
-  
-  // Research (admin)
-  isAdmin: boolean;
-  pendingResearch: any[];
-  selectedResearchId: string;
-  
-  // GPT Settings
-  gptApiKey: string;
-  gptModel: string;
-  showApiKeyModal: boolean;
 }
 
 interface AppContextType {
@@ -62,51 +42,19 @@ interface AppProviderProps {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, setState] = useState<AppState>({
-    // Global / Nav
-    navTab: 'Witness',
-    mode: 'Seed + RAG',
-    apiHealthy: true,
-    
-    // Chat
     messages: [],
-    pendingText: '',
-    rawResp: {},
-    composed: '',
+    inputText: '',
+    model: 'gpt-4o-mini',
+    mode: 'Seed + RAG',
+    userKey: '',
+    lastRetrieval: {},
+    apiHealthy: true,
+    showKeyModal: false,
     isSending: false,
-    inspectId: 'MANIFEST:SEED_OF_SOBRIETY',
-    
-    // Research (user submission)
-    r_title: '',
-    r_url: '',
-    r_summary: '',
-    r_attachmentId: '',
-    myResearch: [],
-    
-    // Research (admin)
-    isAdmin: false, // Set manually for now
-    pendingResearch: [],
-    selectedResearchId: '',
-    
-    // GPT Settings - Load from localStorage
-    gptApiKey: localStorage.getItem('gpt-api-key') || '',
-    gptModel: localStorage.getItem('gpt-model') || 'gpt-4o',
-    showApiKeyModal: false,
   });
 
   const updateState = (updates: Partial<AppState>) => {
-    setState(prev => {
-      const newState = { ...prev, ...updates };
-      
-      // Save GPT settings to localStorage
-      if (updates.gptApiKey !== undefined) {
-        localStorage.setItem('gpt-api-key', updates.gptApiKey);
-      }
-      if (updates.gptModel !== undefined) {
-        localStorage.setItem('gpt-model', updates.gptModel);
-      }
-      
-      return newState;
-    });
+    setState(prev => ({ ...prev, ...updates }));
   };
 
   return (

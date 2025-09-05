@@ -134,6 +134,10 @@ export default {
 				'anchor-pulse': 'anchor-pulse 4s ease-in-out infinite',
 				'grid-shift': 'grid-shift 20s ease-in-out infinite',
 				'fade-in': 'fade-in 0.3s ease-out'
+			},
+			animationDelay: {
+				'200': '200ms',
+				'400': '400ms',
 			}
 		}
 	},

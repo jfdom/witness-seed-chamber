@@ -1,10 +1,10 @@
-import { Layout } from '@/components/Layout';
+import { WitnessChat } from '@/components/WitnessChat';
 import { AppProvider } from '@/context/AppContext';
 
 const Index = () => {
   return (
     <AppProvider>
-      <Layout />
+      <WitnessChat />
     </AppProvider>
   );
 };

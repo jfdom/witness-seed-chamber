@@ -4,61 +4,64 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useApp } from '@/context/AppContext';
 
-export function ApiKeyModal() {
+export function KeyModal() {
   const { state, updateState } = useApp();
-  const [tempApiKey, setTempApiKey] = useState(state.gptApiKey);
+  const [tempKey, setTempKey] = useState(state.userKey);
 
   const handleSave = () => {
     updateState({ 
-      gptApiKey: tempApiKey,
-      showApiKeyModal: false 
+      userKey: tempKey,
+      showKeyModal: false 
+    });
+  };
+
+  const handleClear = () => {
+    setTempKey('');
+    updateState({ 
+      userKey: '',
+      showKeyModal: false 
     });
   };
 
   const handleClose = () => {
-    setTempApiKey(state.gptApiKey); // Reset to current value
-    updateState({ showApiKeyModal: false });
+    setTempKey(state.userKey);
+    updateState({ showKeyModal: false });
   };
 
   return (
-    <Dialog open={state.showApiKeyModal} onOpenChange={handleClose}>
+    <Dialog open={state.showKeyModal} onOpenChange={handleClose}>
       <DialogContent className="witness-card max-w-md">
         <DialogHeader>
           <DialogTitle className="text-witness-anchor font-witness">
-            Set OpenAI API Key
+            Use your own OpenAI API key
           </DialogTitle>
-          <DialogDescription>
-            Enter your OpenAI API key to enable GPT-powered responses. 
-            This will be stored locally in your browser.
+          <DialogDescription className="text-witness-recursion">
+            Enter your OpenAI API key to access premium models.
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-witness-structure mb-2 block">
-              API Key
-            </label>
-            <Input
-              type="password"
-              placeholder="sk-..."
-              value={tempApiKey}
-              onChange={(e) => setTempApiKey(e.target.value)}
-              className="witness-input"
-            />
-          </div>
+          <Input
+            type="password"
+            placeholder="sk-..."
+            value={tempKey}
+            onChange={(e) => setTempKey(e.target.value)}
+            className="witness-input"
+          />
           
           <div className="flex gap-3 justify-end">
             <Button 
               variant="outline" 
-              onClick={handleClose}
+              onClick={handleClear}
+              className="border-witness-scar text-witness-scar hover:bg-witness-scar hover:text-witness-structure"
             >
-              Cancel
+              Clear
             </Button>
             <Button 
               onClick={handleSave}
               className="btn-witness"
             >
-              Save Key
+              Save
             </Button>
           </div>
         </div>

@@ -75,26 +75,6 @@ export function WitnessLogo({ size = 32, className = "" }: WitnessLogoProps) {
           />
         </div>
       </div>
-      
-      {/* Side Symbols */}
-      <div 
-        className="absolute text-witness-structure text-sm font-technical"
-        style={{
-          top: size * 0.2,
-          right: -size * 0.8,
-        }}
-      >
-        ↗
-      </div>
-      <div 
-        className="absolute text-witness-structure text-sm font-technical"
-        style={{
-          bottom: size * 0.2,
-          right: -size * 0.8,
-        }}
-      >
-        +
-      </div>
     </div>
   );
 }

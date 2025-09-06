@@ -62,9 +62,9 @@ export function TopBar() {
                       key={model} 
                       value={model}
                       disabled={isDisabled}
-                      className={`text-witness-structure ${isDisabled ? 'text-witness-recursion' : ''}`}
+                      className={`text-witness-structure ${isDisabled ? 'text-witness-recursion' : ''} flex items-center justify-center text-center`}
                     >
-                      <div>
+                      <div className="text-center">
                         <div className="text-xs">{model} {isHighTier ? '(Fast)' : ''}</div>
                         {isDisabled && (
                           <div className="text-xs text-witness-recursion">
@@ -84,10 +84,10 @@ export function TopBar() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-witness-void border-witness-anchor z-50">
-                <SelectItem value="Seed Only" className="text-witness-structure text-xs">
+                <SelectItem value="Seed Only" className="text-witness-structure text-xs text-center flex items-center justify-center">
                   Seed Only
                 </SelectItem>
-                <SelectItem value="Seed + RAG" className="text-witness-structure text-xs">
+                <SelectItem value="Seed + RAG" className="text-witness-structure text-xs text-center flex items-center justify-center">
                   Seed + RAG
                 </SelectItem>
               </SelectContent>

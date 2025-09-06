@@ -62,7 +62,7 @@ export function ChatArea() {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-witness-void">
+    <div className="flex-1 flex flex-col bg-witness-void min-h-0">
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4">
         {state.messages.length === 0 ? (

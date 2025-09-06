@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useApp } from '@/context/AppContext';
 import { KeyModal } from './KeyModal';
+import { WitnessLogo } from './WitnessLogo';
 
 const GPT_MODELS = [
   'gpt-4o-mini',
@@ -21,71 +22,75 @@ export function TopBar() {
     <>
       <div className="bg-witness-void border-b border-witness-recursion/20 px-6 py-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-witness font-bold text-witness-anchor">
-            Witness Protocol — Chat
-          </h1>
-          
-          <div className="flex items-center gap-4">
-            {/* GPT Model Dropdown */}
-            <div className="flex flex-col">
-              <label className="text-xs text-witness-recursion mb-1">GPT Model</label>
-              <Select value={state.model} onValueChange={(value) => updateState({ model: value })}>
-                <SelectTrigger className="w-[140px] bg-witness-void border-witness-anchor text-witness-anchor">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-witness-void border-witness-anchor">
-                  {GPT_MODELS.map((model) => {
-                    const isHighTier = HIGH_TIER_MODELS.includes(model);
-                    const isDisabled = !state.userKey && isHighTier;
-                    
-                    return (
-                      <SelectItem 
-                        key={model} 
-                        value={model}
-                        disabled={isDisabled}
-                        className={`text-witness-structure ${isDisabled ? 'text-witness-recursion' : ''}`}
-                      >
-                        <div>
-                          <div>{model}</div>
-                          {isDisabled && (
-                            <div className="text-xs text-witness-recursion">
-                              (add your own key to use this model)
-                            </div>
-                          )}
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Logo and Name */}
+          <div className="flex items-center gap-3">
+            <WitnessLogo size={32} />
+            <h1 className="text-xl font-witness font-bold text-witness-structure">
+              Witness Protocol
+            </h1>
+          </div>
 
-            {/* Add Key Button */}
+          {/* Center Model Pill */}
+          <div className="bg-witness-anchor text-witness-void px-4 py-2 rounded-full font-witness font-medium text-sm">
+            GPT: {state.model.toUpperCase()}
+          </div>
+          
+          {/* Right Controls */}
+          <div className="flex items-center gap-3">
+            {/* Update Key Button */}
             <Button
               variant="outline"
               onClick={() => updateState({ showKeyModal: true })}
-              className="border-witness-anchor text-witness-anchor hover:bg-witness-anchor hover:text-witness-void"
+              className="border-witness-anchor text-witness-anchor hover:bg-witness-anchor hover:text-witness-void rounded-full px-4 py-2 text-sm"
             >
-              Add your own key
+              🔗 Update Key
             </Button>
 
+            {/* GPT Model Dropdown */}
+            <Select value={state.model} onValueChange={(value) => updateState({ model: value })}>
+              <SelectTrigger className="w-[160px] bg-witness-void border-witness-anchor text-witness-anchor rounded-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-witness-void border-witness-anchor">
+                {GPT_MODELS.map((model) => {
+                  const isHighTier = HIGH_TIER_MODELS.includes(model);
+                  const isDisabled = !state.userKey && isHighTier;
+                  
+                  return (
+                    <SelectItem 
+                      key={model} 
+                      value={model}
+                      disabled={isDisabled}
+                      className={`text-witness-structure ${isDisabled ? 'text-witness-recursion' : ''}`}
+                    >
+                      <div>
+                        <div>{model} {isHighTier ? '(Fast)' : ''}</div>
+                        {isDisabled && (
+                          <div className="text-xs text-witness-recursion">
+                            (add your own key to use this model)
+                          </div>
+                        )}
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+
             {/* Mode Dropdown */}
-            <div className="flex flex-col">
-              <label className="text-xs text-witness-recursion mb-1">Mode</label>
-              <Select value={state.mode} onValueChange={(value: any) => updateState({ mode: value })}>
-                <SelectTrigger className="w-[120px] bg-witness-void border-witness-anchor text-witness-anchor">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-witness-void border-witness-anchor">
-                  <SelectItem value="Seed Only" className="text-witness-structure">
-                    Seed Only
-                  </SelectItem>
-                  <SelectItem value="Seed + RAG" className="text-witness-structure">
-                    Seed + RAG
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <Select value={state.mode} onValueChange={(value: any) => updateState({ mode: value })}>
+              <SelectTrigger className="w-[140px] bg-witness-void border-witness-anchor text-witness-anchor rounded-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-witness-void border-witness-anchor">
+                <SelectItem value="Seed Only" className="text-witness-structure">
+                  Seed Only
+                </SelectItem>
+                <SelectItem value="Seed + RAG" className="text-witness-structure">
+                  Seed + RAG
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

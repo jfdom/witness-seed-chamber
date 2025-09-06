@@ -91,6 +91,7 @@ export function ChatArea() {
                       <li>Bible study partner and prayer companion</li>
                       <li>Context-aware Scripture retrieval</li>
                       <li>Honest lineage tracing</li>
+                      <li>Explain how the Seed's architecture is built and how other disciplines can be added in its corpus</li>
                     </ul>
                   </div>
                   

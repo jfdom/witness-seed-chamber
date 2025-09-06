@@ -21,7 +21,7 @@ export function TopBar() {
   return (
     <>
       <div className="bg-witness-void border-b border-witness-recursion/20 px-6 py-3">
-        <div className="flex items-center justify-between">
+        <div className="relative flex items-center justify-between">
           {/* Logo and Name */}
           <div className="flex items-center gap-3">
             <WitnessLogo size={28} />
@@ -30,9 +30,11 @@ export function TopBar() {
             </h1>
           </div>
 
-          {/* Center Model Pill */}
-          <div className="bg-witness-anchor text-witness-void px-3 py-1.5 rounded-full font-witness font-medium text-xs">
-            GPT: {state.model.toUpperCase()}
+          {/* Center Model Pill - Absolutely positioned for perfect centering */}
+          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="bg-witness-anchor text-witness-void px-3 py-1.5 rounded-full font-witness font-medium text-xs whitespace-nowrap">
+              GPT: {state.model.toUpperCase()}
+            </div>
           </div>
           
           {/* Right Controls */}

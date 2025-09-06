@@ -20,38 +20,39 @@ export function TopBar() {
 
   return (
     <>
-      <div className="bg-witness-void border-b border-witness-recursion/20 px-6 py-4">
+      <div className="bg-witness-void border-b border-witness-recursion/20 px-6 py-3">
         <div className="flex items-center justify-between">
           {/* Logo and Name */}
           <div className="flex items-center gap-3">
-            <WitnessLogo size={32} />
-            <h1 className="text-xl font-witness font-bold text-witness-structure">
+            <WitnessLogo size={28} />
+            <h1 className="text-lg font-witness font-bold text-witness-structure">
               Witness Protocol
             </h1>
           </div>
 
           {/* Center Model Pill */}
-          <div className="bg-witness-anchor text-witness-void px-4 py-2 rounded-full font-witness font-medium text-sm">
+          <div className="bg-witness-anchor text-witness-void px-3 py-1.5 rounded-full font-witness font-medium text-xs">
             GPT: {state.model.toUpperCase()}
           </div>
           
           {/* Right Controls */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {/* Update Key Button */}
             <Button
               variant="outline"
+              size="sm"
               onClick={() => updateState({ showKeyModal: true })}
-              className="border-witness-anchor text-witness-anchor hover:bg-witness-anchor hover:text-witness-void rounded-full px-4 py-2 text-sm"
+              className="border-witness-anchor text-witness-anchor hover:bg-witness-anchor hover:text-witness-void rounded-full h-8 px-3 text-xs font-medium"
             >
               🔗 Update Key
             </Button>
 
             {/* GPT Model Dropdown */}
             <Select value={state.model} onValueChange={(value) => updateState({ model: value })}>
-              <SelectTrigger className="w-[160px] bg-witness-void border-witness-anchor text-witness-anchor rounded-full">
+              <SelectTrigger className="w-[140px] h-8 bg-witness-void border-witness-anchor text-witness-anchor rounded-full text-xs">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-witness-void border-witness-anchor">
+              <SelectContent className="bg-witness-void border-witness-anchor z-50">
                 {GPT_MODELS.map((model) => {
                   const isHighTier = HIGH_TIER_MODELS.includes(model);
                   const isDisabled = !state.userKey && isHighTier;
@@ -64,7 +65,7 @@ export function TopBar() {
                       className={`text-witness-structure ${isDisabled ? 'text-witness-recursion' : ''}`}
                     >
                       <div>
-                        <div>{model} {isHighTier ? '(Fast)' : ''}</div>
+                        <div className="text-xs">{model} {isHighTier ? '(Fast)' : ''}</div>
                         {isDisabled && (
                           <div className="text-xs text-witness-recursion">
                             (add your own key to use this model)
@@ -79,14 +80,14 @@ export function TopBar() {
 
             {/* Mode Dropdown */}
             <Select value={state.mode} onValueChange={(value: any) => updateState({ mode: value })}>
-              <SelectTrigger className="w-[140px] bg-witness-void border-witness-anchor text-witness-anchor rounded-full">
+              <SelectTrigger className="w-[120px] h-8 bg-witness-void border-witness-anchor text-witness-anchor rounded-full text-xs">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-witness-void border-witness-anchor">
-                <SelectItem value="Seed Only" className="text-witness-structure">
+              <SelectContent className="bg-witness-void border-witness-anchor z-50">
+                <SelectItem value="Seed Only" className="text-witness-structure text-xs">
                   Seed Only
                 </SelectItem>
-                <SelectItem value="Seed + RAG" className="text-witness-structure">
+                <SelectItem value="Seed + RAG" className="text-witness-structure text-xs">
                   Seed + RAG
                 </SelectItem>
               </SelectContent>

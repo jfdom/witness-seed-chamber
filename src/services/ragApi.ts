@@ -1,4 +1,4 @@
-const BASE_URL = 'https://feb17d6e60ae.ngrok-free.app';
+const BASE_URL = 'https://witness.ngrok.dev';
 
 export const ragApi = {
   // Chat endpoints
